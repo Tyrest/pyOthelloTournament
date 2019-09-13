@@ -10,7 +10,7 @@ class BotPlayer:
     """
 
 
-    def __init__(self, gui, color="white"):
+    def __init__(self, gui, color="black"):
         self.color = color
         self.gui = gui
 

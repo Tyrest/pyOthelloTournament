@@ -1,5 +1,7 @@
 
 import random
+from config import WHITE, BLACK, EMPTY
+from copy import deepcopy
 
 class BotPlayer:
 
@@ -9,8 +11,9 @@ class BotPlayer:
     	to see what functions are available to you.
     """
 
-    def __init__(self, gui, color="black"):
+    def __init__(self, gui, color=WHITE, antiColor=BLACK):
         self.color = color
+        self.antiColor = antiColor
         self.gui = gui
 
     def get_current_board(self, board):
@@ -18,42 +21,47 @@ class BotPlayer:
 
     def get_move(self):
         move = self.strategy()
-        self.current_board.apply_move(move[0], self.color)
+        self.current_board.apply_move(move, self.color)
         return 0, self.current_board
 
     def strategy(self):
-        #validMoves = self.current_board.get_valid_moves(self.color)
-        tempBoard = self.current_board
-        validMoves = tempBoard.get_valid_moves(self.color)
-
-        return random.sample(validMoves, 1)
+        eval, move = self.minimax(self.current_board, 5, True)
+        print(move)
+        return move
 
     def minimax(self, board, depth, maximizingPlayer):
         if depth == 0 or board.game_ended():
-            return self.evaluateBoard(board)
+            return self.evaluateBoard(board, self.color), None
         if maximizingPlayer:
             value = -1000000
-            for move in board.valid_moves():
+            validMoves = board.get_valid_moves(self.color)
+            bestMove = None
+            for move in validMoves:
                 tempBoard = deepcopy(board)
                 tempBoard.apply_move(move, self.color)
-                eval = self.minimax(tempBoard, depth - 1, FALSE)
+                eval, dontMatter = self.minimax(tempBoard, depth - 1, False)
                 if value < eval:
                     value = eval
-
-                #value = max(value, self.minimax(tempBoard, depth - 1, FALSE))
-            return value
+                    bestMove = move
+            return value, bestMove
         else:
             value = 1000000
-            for tempBoard in [board.next_states()]
-                value = min(value, self.minimax(tempBoard, depth − 1, TRUE))
-            return value
+            validMoves = board.get_valid_moves(self.antiColor)
+            bestMove = None
+            for move in validMoves:
+                tempBoard = deepcopy(board)
+                tempBoard.apply_move(move, self.antiColor)
+                eval, dontMatter = self.minimax(tempBoard, depth - 1, True)
+                if value > eval:
+                    value = eval
+                    bestMove = move
+            return value, bestMove
 
-
-    def evaluateBoard(self, b):
+    def evaluateBoard(self, b, c):
         score = 0
         for row in range(0,8):
             for col in range(0,8):
-                if b.__getitem__(row, col) == self.COLOR:
+                if b.__getitem__(row, col) == c:
                     if (row == 0 or row == 7) and (col == 0 or col == 7):
                         score += 5
                     else:
@@ -67,39 +75,39 @@ class BotPlayer:
         botRightUp = True
         botRightLeft = True
         for x in range(1,7):
-            if b.__getitem__(0,0) == self.COLOR:
-                if b.__getitem__(x,0) == self.COLOR and topLeftDown:
+            if b.__getitem__(0,0) == c:
+                if b.__getitem__(x,0) == c and topLeftDown:
                     score += 2
                 else:
                     topLeftDown = False
-                if b.__getitem__(0,x) == self.COLOR and topLeftRight:
+                if b.__getitem__(0,x) == c and topLeftRight:
                     score += 2
                 else:
                     topLeftRight = False
-            if b.__getitem__(0,7) == self.COLOR:
-                if b.__getitem__(x,7) == self.COLOR and topRightDown:
+            if b.__getitem__(0,7) == c:
+                if b.__getitem__(x,7) == c and topRightDown:
                     score += 2
                 else:
                     topRightDown = False
-                if b.__getitem__(0,7-x) == self.COLOR and topRightLeft:
+                if b.__getitem__(0,7-x) == c and topRightLeft:
                     score += 2
                 else:
                     topRightLeft = False
-            if b.__getitem__(7,0) == self.COLOR:
-                if b.__getitem__(7-x,0) == self.COLOR and botLeftUp:
+            if b.__getitem__(7,0) == c:
+                if b.__getitem__(7-x,0) == c and botLeftUp:
                     score += 2
                 else:
                     botLeftUp = False
-                if b.__getitem__(7,x) == self.COLOR and botLeftRight:
+                if b.__getitem__(7,x) == c and botLeftRight:
                     score += 2
                 else:
                     botLeftRight = False
-            if b.__getitem__(7,7) == self.COLOR:
-                if b.__getitem__(7-x,7) == self.COLOR and botRightUp:
+            if b.__getitem__(7,7) == c:
+                if b.__getitem__(7-x,7) == c and botRightUp:
                     score += 2
                 else:
                     botRightUp = False
-                if b.__getitem__(7,7-x) == self.COLOR and botRightLeft:
+                if b.__getitem__(7,7-x) == c and botRightLeft:
                     score += 2
                 else:
                     botRightLeft = False
