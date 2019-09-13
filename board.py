@@ -325,7 +325,7 @@ the specified color."""
 
     def next_states(self, color):
         """Given a player's color return all the boards resulting from moves
-        that this player cand do. It's implemented as an iterator.
+        that this player can do. It's implemented as an iterator.
 
         """
         valid_moves = self.get_valid_moves(color)

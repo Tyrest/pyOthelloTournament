@@ -1,5 +1,5 @@
+
 import random
-from config import WHITE, BLACK, EMPTY
 
 class BotPlayer:
 
@@ -9,70 +9,45 @@ class BotPlayer:
     	to see what functions are available to you.
     """
 
-    def __init__(self, gui, color="white"):
+    def __init__(self, gui, color="black"):
         self.color = color
         self.gui = gui
-        self.COLOR = WHITE
 
     def get_current_board(self, board):
         self.current_board = board
 
     def get_move(self):
-        validMoves = self.current_board.get_valid_moves(self.color)
-        move = self.strategy(validMoves)
+        move = self.strategy()
         self.current_board.apply_move(move[0], self.color)
-        print(self.evaluateBoard(self.current_board))
         return 0, self.current_board
 
-    def strategy(self, validMoves):
-        print(validMoves)
-        bestMoves = []
-        bestMoves.append(validMoves[0])
-        moveValue = -1
+    def strategy(self):
+        #validMoves = self.current_board.get_valid_moves(self.color)
+        tempBoard = self.current_board
+        validMoves = tempBoard.get_valid_moves(self.color)
 
-        # Loops through the valid moves
-        for move in validMoves:
-            # Tests if the move is a corner
-            if (move[0] == 0 or move[0] == 7) and (move[1] == 0 or move[1] == 7):
-                if moveValue < 3:
-                    bestMoves.clear()
-                bestMoves.append(move)
-                moveValue = 3
-            # Tests if the row is in the middle
-            elif move[0] > 1 and move[0] < 6 and moveValue < 3:
-                # Tests if the move is in the middle 4x4
-                if move[1] > 1 and move[1] < 6:
-                    if moveValue < 2:
-                        bestMoves.clear()
-                    bestMoves.append(move)
-                    moveValue = 2
-                # Tests if the move is on a safe edge
-                elif move[1] == 0 or move[1] == 7 and moveValue < 2:
-                    if moveValue < 1:
-                        bestMoves.clear()
-                    bestMoves.append(move)
-                    moveValue = 1
-            # Tests if the col is in the middle
-            elif move[1] > 1 and move[1] < 6 and moveValue < 2:
-                #Tests if the move is on a safe edge
-                if move[0] == 0 or move[0] == 7:
-                    if moveValue < 1:
-                        bestMoves.clear()
-                    bestMoves.append(move)
-                    moveValue = 1
+        return random.sample(validMoves, 1)
 
-        if moveValue == 3:
-            print('Corner')
-        if moveValue == 2:
-            print('Middle')
-        if moveValue == 1:
-            print('Safe Edge')
-        if moveValue == 0:
-            print('Buffer')
-        if moveValue == -1:
-            print('Bad')
-            return random.sample(validMoves, 1)
-        return random.sample(bestMoves, 1)
+    def minimax(self, board, depth, maximizingPlayer):
+        if depth == 0 or board.game_ended():
+            return self.evaluateBoard(board)
+        if maximizingPlayer:
+            value = -1000000
+            for move in board.valid_moves():
+                tempBoard = deepcopy(board)
+                tempBoard.apply_move(move, self.color)
+                eval = self.minimax(tempBoard, depth - 1, FALSE)
+                if value < eval:
+                    value = eval
+
+                #value = max(value, self.minimax(tempBoard, depth - 1, FALSE))
+            return value
+        else:
+            value = 1000000
+            for tempBoard in [board.next_states()]
+                value = min(value, self.minimax(tempBoard, depth − 1, TRUE))
+            return value
+
 
     def evaluateBoard(self, b):
         score = 0
