@@ -47,7 +47,7 @@ class Othello:
             self.logging = False
         else:
             self.now_playing = player.Computer(BLACK, level + 3)
-        
+
         if player2[-3:] == ".py":
             globals()["student2"] = import_module(player2[:-3])
             self.other_player = student2.BotPlayer(self.gui, WHITE)
@@ -61,10 +61,10 @@ class Othello:
             timestamp = str(datetime.datetime.today())
             timestamp = timestamp[:timestamp.rfind('.')]
             print(timestamp)
-            self.logfile = open("pyOthello game log " + timestamp, "w")
+            self.logfile = open("logs/pyOthello game log " + timestamp, "w")
             self.logfile.write("Creating a game between " + str(player1) + "(Black) and " + str(player2) + "(White)\n")
         print("Creating a game between " + str(player1) + " and " + str(player2))
-        
+
         self.gui.show_game()
         self.gui.update(self.board.board, 2, 2, self.now_playing.color)
 
@@ -113,7 +113,7 @@ def main():
     if len(sys.argv) > 1:
         if len(sys.argv) == 3:
             player1 = sys.argv[1]
-            player2 = sys.argv[2]   
+            player2 = sys.argv[2]
             if (player1[-3:] != '.py' and player1 not in legalinputs) or (
                 player2[-3:] != '.py' and player2 not in legalinputs):
                 print("Legal command line arguments are: human, computer, or the name of a python file with a BotPlayer class.")
