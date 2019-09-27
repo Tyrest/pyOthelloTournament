@@ -53,6 +53,7 @@ class BotPlayer:
         score = 0
         score += self.generalPosition(board, self.color)
         score += self.stableSides(board, self.color)
+        score -= 0.5 * self.stableSides(board, self.antiColor)
         if board.count_stones()[2] > 32:
             score += 4 * len(board.get_valid_moves(self.color))
         return score

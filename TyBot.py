@@ -9,10 +9,9 @@ class BotPlayer:
     	to see what functions are available to you.
     """
 
-    def __init__(self, gui, color=WHITE):
+    def __init__(self, gui, color=BLACK):
         self.color = color
         self.gui = gui
-        self.COLOR = WHITE
 
     def get_current_board(self, board):
         self.current_board = board
