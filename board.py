@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+# !/usr/bin/env python
 """ game.py Humberto Henrique Campos Pinheiro
 Game logic.
 """

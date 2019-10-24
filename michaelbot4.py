@@ -80,7 +80,7 @@ class BotPlayer:
         if self.moveCount < 26:
 
             for state in self.current_board.next_states(self.color) :
-                scores.append(-self.negamax(state, 3, -1000000, 1000000, self.anticolor, -1))
+                scores.append(-self.negamax(state, 4, -1000000, 1000000, self.anticolor, -1))
                 moves = self.current_board.get_valid_moves(self.color)
             self.current_board.apply_move(moves[scores.index(max(scores))], self.color)
         else:
